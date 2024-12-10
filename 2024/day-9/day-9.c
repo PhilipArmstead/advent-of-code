@@ -22,54 +22,47 @@ int day9(char *filepath) {
 	fgets(line, 20008, fp);
 	fclose(fp);
 
-	u16 tail = 0;
-	while (line[tail + 1] != '\0' && line[tail + 1] != '\n') {
-		++tail;
-	}
-
 	u64 answerPartOne = 0;
 	u16 answerPartTwo = 0;
 
-	u16 *data = malloc(32768);
+	u16 *data = malloc(131072);
 
-	u16 head = 0;
-	u16 startId = 0;
-	u16 endId = tail / 2;
-	u8 availableGaps = 0;
-	u8 requiredGaps = line[tail] - 48;
-	u16 dataIndex = 0;
-
-	while (head < tail) {
-		u8 value = line[head++] - 48;
-		for (u8 i = 0; i < value; ++i) {
-			answerPartOne += startId * dataIndex;
-			data[dataIndex++] = startId;
+	u32 head = 0;
+	u16 id = 1;
+	u32 length = 0;
+	while (true) {
+		u8 value = (line[head++] - 48);
+		while (value--) {
+			data[length++] = id;
 		}
 
-		availableGaps += line[head] - 48;
-		while (availableGaps) {
-			u8 t = availableGaps < requiredGaps ? availableGaps : requiredGaps;
-			for (u8 i = 0; i < t; ++i) {
-				answerPartOne += endId * dataIndex;
-				data[dataIndex++] = endId;
-				--availableGaps;
-				--requiredGaps;
-			}
-
-			if (!requiredGaps) {
-				--endId;
-				tail -= 2;
-				requiredGaps += line[tail] - 48;
-			}
+		if (line[head] == '\0' || line[head] == '\n') {
+			break;
 		}
 
-		++head;
-		++startId;
+		value = line[head++] - 48;
+		while (value--) {
+			data[length++] = 0;
+		}
+
+		++id;
 	}
 
-	while (requiredGaps--) {
-		answerPartOne += endId * dataIndex;
-		data[dataIndex++] = endId;
+	head = 0;
+	while (head < length - 1) {
+		if (data[head] == 0) {
+			data[head] = data[length - 1];
+			--length;
+		}
+		++head;
+
+		while (data[length - 1] == 0) {
+			--length;
+		}
+	}
+
+	for (u32 i = 0; i < length; ++i) {
+		answerPartOne += (data[i] - 1) * i;
 	}
 
 	free(line);
@@ -83,7 +76,7 @@ int day9(char *filepath) {
 #ifndef IS_MAIN
 
 int main() {
-	day9("ex1.txt");
+	day9("input.txt");
 }
 
 #endif
