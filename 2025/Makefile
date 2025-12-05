@@ -22,7 +22,11 @@ day-4:
 	$(CC) -c $@/$@.c -o $@/$@.o $(CCFLAGS) $(DEBUG_FLAGS)
 	$(CC) $@/$@.o -o $@/$@.out $(LDFLAGS) $(DEBUG_FLAGS)
 
+day-5:
+	$(CC) -c $@/$@.c -o $@/$@.o $(CCFLAGS) $(DEBUG_FLAGS)
+	$(CC) $@/$@.o -o $@/$@.out $(LDFLAGS) $(DEBUG_FLAGS)
+
 clean:
 	rm aoc
 
-.PHONY: all clean day-1 day-2 day-3 day-4
+.PHONY: all clean day-1 day-2 day-3 day-4 day-5
